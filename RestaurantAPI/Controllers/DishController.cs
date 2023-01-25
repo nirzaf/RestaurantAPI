@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
+
 using RestaurantAPI.Models;
 using RestaurantAPI.Services;
 
@@ -26,7 +27,7 @@ public class DishController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post([FromRoute]int restaurantId, [FromBody] CreateDishDto dto)
+    public ActionResult Post([FromRoute] int restaurantId, [FromBody] CreateDishDto dto)
     {
         var newDishId = _dishService.Create(restaurantId, dto);
 
@@ -46,5 +47,4 @@ public class DishController : ControllerBase
         var result = _dishService.GetAll(restaurantId);
         return Ok(result);
     }
-
 }

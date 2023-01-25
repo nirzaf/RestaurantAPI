@@ -11,7 +11,6 @@ namespace RestaurantAPI.Controllers;
 [Route("api/restaurant")]
 [ApiController]
 [Authorize]
-
 public class RestaurantController : ControllerBase
 {
     private readonly IRestaurantService _restaurantService;
@@ -31,7 +30,7 @@ public class RestaurantController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery]RestaurantQuery query)
+    public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery] RestaurantQuery query)
     {
         var restaurantsDtos = _restaurantService.GetAll(query);
 
@@ -39,11 +38,10 @@ public class RestaurantController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult Update([FromBody] UpdateRestaurantDto dto, [FromRoute]int id)
+    public ActionResult Update([FromBody] UpdateRestaurantDto dto, [FromRoute] int id)
     {
-
         _restaurantService.Update(id, dto);
-           
+
         return Ok();
     }
 
@@ -54,7 +52,6 @@ public class RestaurantController : ControllerBase
 
         return NoContent();
     }
-
 
 
     [HttpGet("{id}")]

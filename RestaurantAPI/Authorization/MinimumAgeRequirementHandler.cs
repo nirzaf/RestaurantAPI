@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
@@ -14,7 +15,9 @@ public class MinimumAgeRequirementHandler : AuthorizationHandler<MinimumAgeRequi
     {
         _logger = logger;
     }
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)
+
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
+        MinimumAgeRequirement requirement)
     {
         var dateOfBirth = DateTime.Parse(context.User.FindFirst(c => c.Type == "DateOfBirth").Value);
 

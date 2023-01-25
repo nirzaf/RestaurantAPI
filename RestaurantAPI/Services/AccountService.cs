@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 using RestaurantAPI.Entities;
 using RestaurantAPI.Exceptions;
 using RestaurantAPI.Models;
@@ -19,18 +20,21 @@ public interface IAccountService
     void RegisterUser(RegisterUserDto dto);
     string GenerateJwt(LoginDto dto);
 }
+
 public class AccountService : IAccountService
 {
     private readonly RestaurantDbContext _context;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly AuthenticationSettings _authenticationSettings;
 
-    public AccountService(RestaurantDbContext context, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+    public AccountService(RestaurantDbContext context, IPasswordHasher<User> passwordHasher,
+        AuthenticationSettings authenticationSettings)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _authenticationSettings = authenticationSettings;
     }
+
     public void RegisterUser(RegisterUserDto dto)
     {
         var newUser = new User
@@ -70,7 +74,6 @@ public class AccountService : IAccountService
             new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
             new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
             new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
-
         };
 
         if (!string.IsNullOrEmpty(user.Nationality))
@@ -92,6 +95,5 @@ public class AccountService : IAccountService
 
         var tokenHandler = new JwtSecurityTokenHandler();
         return tokenHandler.WriteToken(token);
-
     }
 }

@@ -1,15 +1,24 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+
 using Xunit;
+
 using Microsoft.AspNetCore.Mvc.Testing;
+
 using FluentAssertions;
+
 using System.Net.Http;
+
 using Microsoft.EntityFrameworkCore;
+
 using RestaurantAPI.Entities;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using RestaurantAPI.Models;
 
 using Microsoft.AspNetCore.Authorization.Policy;
+
 using RestaurantAPI.IntegrationTests.Helpers;
 
 namespace RestaurantAPI.IntegrationTests;
@@ -18,6 +27,7 @@ public class RestaurantControllerTests : IClassFixture<WebApplicationFactory<Sta
 {
     private HttpClient _client;
     private WebApplicationFactory<Startup> _factory;
+
     public RestaurantControllerTests(WebApplicationFactory<Startup> factory)
     {
         _factory = factory
@@ -26,7 +36,8 @@ public class RestaurantControllerTests : IClassFixture<WebApplicationFactory<Sta
                 builder.ConfigureServices(services =>
                 {
                     var dbContextOptions = services
-                        .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<RestaurantDbContext>));
+                        .SingleOrDefault(
+                            service => service.ServiceType == typeof(DbContextOptions<RestaurantDbContext>));
 
                     services.Remove(dbContextOptions);
 
@@ -37,7 +48,6 @@ public class RestaurantControllerTests : IClassFixture<WebApplicationFactory<Sta
 
                     services
                         .AddDbContext<RestaurantDbContext>(options => options.UseInMemoryDatabase("RestaurantDb"));
-
                 });
             });
 
@@ -107,7 +117,6 @@ public class RestaurantControllerTests : IClassFixture<WebApplicationFactory<Sta
         // assert
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
-
     }
 
     [Fact]

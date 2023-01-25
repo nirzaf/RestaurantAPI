@@ -6,8 +6,8 @@ public class RestaurantDbContext : DbContext
 {
     public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
     {
-            
     }
+
     public DbSet<Restaurant> Restaurants { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Dish> Dishes { get; set; }
@@ -43,5 +43,4 @@ public class RestaurantDbContext : DbContext
             .IsRequired()
             .HasMaxLength(50);
     }
-
 }

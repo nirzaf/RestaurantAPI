@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 
 using FluentValidation;
+
 using RestaurantAPI.Entities;
 
 namespace RestaurantAPI.Models.Validators;

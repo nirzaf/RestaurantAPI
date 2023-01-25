@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using Xunit;
+
 using FluentAssertions;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,10 +28,7 @@ public class StartupTests : IClassFixture<WebApplicationFactory<Startup>>
 
         _factory = factory.WithWebHostBuilder(builder =>
         {
-            builder.ConfigureServices(services =>
-            {
-                _controllerTypes.ForEach(c => services.AddScoped(c));
-            });
+            builder.ConfigureServices(services => { _controllerTypes.ForEach(c => services.AddScoped(c)); });
         });
     }
 
@@ -40,13 +40,11 @@ public class StartupTests : IClassFixture<WebApplicationFactory<Startup>>
         using var scope = scopeFactory.CreateScope();
 
 
-
         // assert
         _controllerTypes.ForEach(t =>
         {
             var controller = scope.ServiceProvider.GetService(t);
             controller.Should().NotBeNull();
-
         });
     }
 }

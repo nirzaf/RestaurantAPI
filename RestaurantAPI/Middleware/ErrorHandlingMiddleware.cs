@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+
 using RestaurantAPI.Exceptions;
 
 namespace RestaurantAPI.Middleware;
@@ -14,6 +16,7 @@ public class ErrorHandlingMiddleware : IMiddleware
     {
         _logger = logger;
     }
+
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try

@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+
 using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
 using RestaurantAPI.Models.Validators;
@@ -81,7 +82,7 @@ public class RestaurantQueryValidatorTests
     {
         // arrange
         var validator = new RestaurantQueryValidator();
-          
+
 
         // act
         var result = validator.TestValidate(model);

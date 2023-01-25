@@ -18,5 +18,4 @@ public class Restaurant
     public virtual Address Address { get; set; }
 
     public virtual List<Dish> Dishes { get; set; }
-
 }

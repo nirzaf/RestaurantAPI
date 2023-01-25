@@ -10,7 +10,7 @@ namespace RestaurantAPI.Controllers;
 public class FileController : ControllerBase
 {
     [HttpGet]
-    [ResponseCache(Duration = 1200, VaryByQueryKeys = new []{ "fileName"})]
+    [ResponseCache(Duration = 1200, VaryByQueryKeys = new[] { "fileName" })]
     public ActionResult GetFile([FromQuery] string fileName)
     {
         var rootPath = Directory.GetCurrentDirectory();
@@ -32,7 +32,7 @@ public class FileController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Upload([FromForm]IFormFile file)
+    public ActionResult Upload([FromForm] IFormFile file)
     {
         if (file != null && file.Length > 0)
         {

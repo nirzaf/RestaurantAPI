@@ -26,7 +26,8 @@ public class FakePolicyEvaluator : IPolicyEvaluator
         return Task.FromResult(result);
     }
 
-    public Task<PolicyAuthorizationResult> AuthorizeAsync(AuthorizationPolicy policy, AuthenticateResult authenticationResult, HttpContext context, object resource)
+    public Task<PolicyAuthorizationResult> AuthorizeAsync(AuthorizationPolicy policy,
+        AuthenticateResult authenticationResult, HttpContext context, object resource)
     {
         var result = PolicyAuthorizationResult.Success();
         return Task.FromResult(result);

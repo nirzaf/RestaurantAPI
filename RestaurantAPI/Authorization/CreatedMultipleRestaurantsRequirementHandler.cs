@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
+
 using RestaurantAPI.Entities;
 
 namespace RestaurantAPI.Authorization;
@@ -14,12 +16,13 @@ public class CreatedMultipleRestaurantsRequirementHandler : AuthorizationHandler
     {
         _context = context;
     }
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
+
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
         CreatedMultipleRestaurantsRequirement requirement)
     {
         var userId = int.Parse(context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-        var createdRestaurantsCount =  _context
+        var createdRestaurantsCount = _context
             .Restaurants
             .Count(r => r.CreatedById == userId);
 

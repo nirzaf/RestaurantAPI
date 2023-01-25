@@ -1,16 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+
 using RestaurantAPI.Entities;
 
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+
 using Xunit;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using RestaurantAPI.Models;
 using RestaurantAPI.IntegrationTests.Helpers;
+
 using FluentAssertions;
+
 using RestaurantAPI.Services;
+
 using Moq;
 
 namespace RestaurantAPI.IntegrationTests;
@@ -28,7 +35,8 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
                 builder.ConfigureServices(services =>
                 {
                     var dbContextOptions = services
-                        .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<RestaurantDbContext>));
+                        .SingleOrDefault(
+                            service => service.ServiceType == typeof(DbContextOptions<RestaurantDbContext>));
 
                     services.Remove(dbContextOptions);
 
@@ -37,7 +45,6 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
 
                     services
                         .AddDbContext<RestaurantDbContext>(options => options.UseInMemoryDatabase("RestaurantDb"));
-
                 });
             })
             .CreateClient();

@@ -2,6 +2,7 @@
 using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
+
 using RestaurantAPI.Entities;
 
 namespace RestaurantAPI;
@@ -14,6 +15,7 @@ public class RestaurantSeeder
     {
         _dbContext = dbContext;
     }
+
     public void Seed()
     {
         if (!_dbContext.Database.CanConnect()) return;
@@ -25,7 +27,7 @@ public class RestaurantSeeder
                 _dbContext.Database.Migrate();
             }
         }
-            
+
         if (!_dbContext.Roles.Any())
         {
             var roles = GetRoles();

@@ -8,5 +8,6 @@ public class CreatedMultipleRestaurantsRequirement : IAuthorizationRequirement
     {
         MinimumRestaurantsCreated = minimumRestaurantsCreated;
     }
+
     public int MinimumRestaurantsCreated { get; }
 }

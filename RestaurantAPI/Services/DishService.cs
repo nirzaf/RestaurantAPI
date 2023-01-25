@@ -2,7 +2,9 @@
 using System.Linq;
 
 using AutoMapper;
+
 using Microsoft.EntityFrameworkCore;
+
 using RestaurantAPI.Entities;
 using RestaurantAPI.Exceptions;
 using RestaurantAPI.Models;
@@ -27,6 +29,7 @@ public class DishService : IDishService
         _context = context;
         _mapper = mapper;
     }
+
     public int Create(int restaurantId, CreateDishDto dto)
     {
         var restaurant = GetRestaurantById(restaurantId);
@@ -56,7 +59,6 @@ public class DishService : IDishService
 
     public List<DishDto> GetAll(int restaurantId)
     {
-
         var restaurant = GetRestaurantById(restaurantId);
         var dishDtos = _mapper.Map<List<DishDto>>(restaurant.Dishes);
 
@@ -69,7 +71,6 @@ public class DishService : IDishService
 
         _context.RemoveRange(restaurant.Dishes);
         _context.SaveChanges();
-
     }
 
     private Restaurant GetRestaurantById(int restaurantId)

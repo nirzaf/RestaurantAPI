@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +16,7 @@ public class RequestTimeMiddleware : IMiddleware
         _logger = logger;
         _stopWatch = new Stopwatch();
     }
+
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         _stopWatch.Start();
@@ -28,8 +30,6 @@ public class RequestTimeMiddleware : IMiddleware
                 $"Request [{context.Request.Method}] at {context.Request.Path} took {elapsedMilliseconds} ms";
 
             _logger.LogInformation(message);
-
         }
-
     }
 }

@@ -92,7 +92,7 @@ public class Startup
                     .WithOrigins(Configuration["AllowedOrigins"]!)
             );
         });
-            
+
         services.AddDbContext<RestaurantDbContext>
             (options => options.UseSqlServer(Configuration.GetConnectionString("RestaurantDbConnection")!));
     }

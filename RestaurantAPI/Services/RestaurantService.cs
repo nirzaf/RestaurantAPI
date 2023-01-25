@@ -4,9 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 
 using AutoMapper;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using RestaurantAPI.Authorization;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Exceptions;
@@ -41,6 +43,7 @@ public class RestaurantService : IRestaurantService
         _authorizationService = authorizationService;
         _userContextService = userContextService;
     }
+
     public int Create(CreateRestaurantDto dto)
     {
         var restaurant = _mapper.Map<Restaurant>(dto);
@@ -50,13 +53,14 @@ public class RestaurantService : IRestaurantService
 
         return restaurant.Id;
     }
+
     public void Update(int id, UpdateRestaurantDto dto)
     {
         var restaurant = _dbContext
             .Restaurants
             .FirstOrDefault(r => r.Id == id);
 
-        if (restaurant is null) 
+        if (restaurant is null)
             throw new NotFoundException("Restaurant not found");
 
 
@@ -96,19 +100,16 @@ public class RestaurantService : IRestaurantService
 
         _dbContext.Restaurants.Remove(restaurant);
         _dbContext.SaveChanges();
-
     }
 
     public RestaurantDto GetById(int id)
     {
-
         var restaurant = _dbContext
             .Restaurants
             .Include(r => r.Address)
             .Include(r => r.Dishes)
             .FirstOrDefault(r => r.Id == id);
 
-        
 
         if (restaurant is null)
             throw new NotFoundException("Restaurant not found");
@@ -157,6 +158,4 @@ public class RestaurantService : IRestaurantService
 
         return result;
     }
-
-
 }
