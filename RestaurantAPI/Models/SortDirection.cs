@@ -1,8 +1,7 @@
-﻿namespace RestaurantAPI.Models
+﻿namespace RestaurantAPI.Models;
+
+public enum SortDirection
 {
-    public enum SortDirection
-    {
-        ASC,
-        DESC
-    }
+    ASC,
+    DESC
 }

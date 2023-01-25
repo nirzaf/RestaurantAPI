@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
-using System;
-using System.Collections.Generic;
+
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,105 +13,104 @@ using FluentAssertions;
 using RestaurantAPI.Services;
 using Moq;
 
-namespace RestaurantAPI.IntegrationTests
+namespace RestaurantAPI.IntegrationTests;
+
+public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startup>>
 {
-    public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startup>>
+    private HttpClient _client;
+    private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
+
+    public AccountControllerTests(WebApplicationFactory<Startup> factory)
     {
-        private HttpClient _client;
-        private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
-
-        public AccountControllerTests(WebApplicationFactory<Startup> factory)
-        {
-            _client = factory
-                  .WithWebHostBuilder(builder =>
-                  {
-                      builder.ConfigureServices(services =>
-                      {
-                          var dbContextOptions = services
-                              .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<RestaurantDbContext>));
-
-                          services.Remove(dbContextOptions);
-
-                          services.AddSingleton<IAccountService>(_accountServiceMock.Object);
-
-
-                          services
-                           .AddDbContext<RestaurantDbContext>(options => options.UseInMemoryDatabase("RestaurantDb"));
-
-                      });
-                  })
-                .CreateClient();
-        }
-
-        [Fact]
-        public async Task Login_ForRegisteredUser_ReturnsOk()
-        {
-            // arrange
-
-            _accountServiceMock
-                .Setup(e => e.GenerateJwt(It.IsAny<LoginDto>()))
-                .Returns("jwt");
-
-            var loginDto = new LoginDto()
+        _client = factory
+            .WithWebHostBuilder(builder =>
             {
-                Email = "test@test.com",
-                Password = "password123"
-            };
+                builder.ConfigureServices(services =>
+                {
+                    var dbContextOptions = services
+                        .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<RestaurantDbContext>));
 
-            var httpContent = loginDto.ToJsonHttpContent();
+                    services.Remove(dbContextOptions);
 
-            // act
+                    services.AddSingleton<IAccountService>(_accountServiceMock.Object);
 
-            var response = await _client.PostAsync("/api/account/login", httpContent);
 
-            // assert
+                    services
+                        .AddDbContext<RestaurantDbContext>(options => options.UseInMemoryDatabase("RestaurantDb"));
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        }
+                });
+            })
+            .CreateClient();
+    }
 
-        [Fact]
-        public async Task RegisterUser_ForValidModel_ReturnsOk()
+    [Fact]
+    public async Task Login_ForRegisteredUser_ReturnsOk()
+    {
+        // arrange
+
+        _accountServiceMock
+            .Setup(e => e.GenerateJwt(It.IsAny<LoginDto>()))
+            .Returns("jwt");
+
+        var loginDto = new LoginDto
         {
-            // arrange
+            Email = "test@test.com",
+            Password = "password123"
+        };
 
-            var registerUser = new RegisterUserDto()
-            {
-                Email = "test@test.com",
-                Password = "password123",
-                ConfirmPassword = "password123"
-            };
+        var httpContent = loginDto.ToJsonHttpContent();
 
-            var httpContent = registerUser.ToJsonHttpContent();
+        // act
 
-            // act
+        var response = await _client.PostAsync("/api/account/login", httpContent);
 
-            var response = await _client.PostAsync("/api/account/register", httpContent);
+        // assert
 
-            // assert
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+    }
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        }
+    [Fact]
+    public async Task RegisterUser_ForValidModel_ReturnsOk()
+    {
+        // arrange
 
-        [Fact]
-        public async Task RegisterUser_ForInvalidModel_ReturnsBadRequest()
+        var registerUser = new RegisterUserDto
         {
-            // arrange
+            Email = "test@test.com",
+            Password = "password123",
+            ConfirmPassword = "password123"
+        };
 
-            var registerUser = new RegisterUserDto()
-            {
-                Password = "password123",
-                ConfirmPassword = "123"
-            };
+        var httpContent = registerUser.ToJsonHttpContent();
 
-            var httpContent = registerUser.ToJsonHttpContent();
+        // act
 
-            // act
+        var response = await _client.PostAsync("/api/account/register", httpContent);
 
-            var response = await _client.PostAsync("/api/account/register", httpContent);
+        // assert
 
-            // assert
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+    }
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
-        }
+    [Fact]
+    public async Task RegisterUser_ForInvalidModel_ReturnsBadRequest()
+    {
+        // arrange
+
+        var registerUser = new RegisterUserDto
+        {
+            Password = "password123",
+            ConfirmPassword = "123"
+        };
+
+        var httpContent = registerUser.ToJsonHttpContent();
+
+        // act
+
+        var response = await _client.PostAsync("/api/account/register", httpContent);
+
+        // assert
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
     }
 }
