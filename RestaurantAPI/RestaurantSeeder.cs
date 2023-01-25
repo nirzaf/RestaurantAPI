@@ -45,15 +45,15 @@ public class RestaurantSeeder
     {
         var roles = new List<Role>
         {
-            new Role
+            new()
             {
                 Name = "User"
             },
-            new Role
+            new()
             {
                 Name = "Manager"
             },
-            new Role
+            new()
             {
                 Name = "Admin"
             },
@@ -66,7 +66,7 @@ public class RestaurantSeeder
     {
         var restaurants = new List<Restaurant>
         {
-            new Restaurant
+            new()
             {
                 Name = "KFC",
                 Category = "Fast Food",
@@ -76,13 +76,13 @@ public class RestaurantSeeder
                 HasDelivery = true,
                 Dishes = new List<Dish>
                 {
-                    new Dish
+                    new()
                     {
                         Name = "Nashville Hot Chicken",
                         Price = 10.30M,
                     },
 
-                    new Dish
+                    new()
                     {
                         Name = "Chicken Nuggets",
                         Price = 5.30M,
@@ -95,7 +95,7 @@ public class RestaurantSeeder
                     PostalCode = "30-001"
                 }
             },
-            new Restaurant
+            new()
             {
                 Name = "McDonald Szewska",
                 Category = "Fast Food",

@@ -70,10 +70,10 @@ public class AccountService : IAccountService
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-            new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
-            new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+            new(ClaimTypes.Role, $"{user.Role.Name}"),
+            new("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
         };
 
         if (!string.IsNullOrEmpty(user.Nationality))

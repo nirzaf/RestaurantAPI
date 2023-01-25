@@ -17,23 +17,23 @@ public class RestaurantQueryValidatorTests
     {
         var list = new List<RestaurantQuery>
         {
-            new RestaurantQuery
+            new()
             {
                 PageNumber = 1,
                 PageSize = 10
             },
-            new RestaurantQuery
+            new()
             {
                 PageNumber = 2,
                 PageSize = 15
             },
-            new RestaurantQuery
+            new()
             {
                 PageNumber = 22,
                 PageSize = 5,
                 SortBy = nameof(Restaurant.Name)
             },
-            new RestaurantQuery
+            new()
             {
                 PageNumber = 12,
                 PageSize = 15,
@@ -48,23 +48,23 @@ public class RestaurantQueryValidatorTests
     {
         var list = new List<RestaurantQuery>
         {
-            new RestaurantQuery
+            new()
             {
                 PageNumber = 0,
                 PageSize = 10
             },
-            new RestaurantQuery
+            new()
             {
                 PageNumber = 2,
                 PageSize = 13
             },
-            new RestaurantQuery
+            new()
             {
                 PageNumber = 22,
                 PageSize = 5,
                 SortBy = nameof(Restaurant.ContactEmail)
             },
-            new RestaurantQuery
+            new()
             {
                 PageNumber = 12,
                 PageSize = 15,

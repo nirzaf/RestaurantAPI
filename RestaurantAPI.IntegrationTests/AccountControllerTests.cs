@@ -25,7 +25,7 @@ namespace RestaurantAPI.IntegrationTests;
 public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startup>>
 {
     private HttpClient _client;
-    private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
+    private Mock<IAccountService> _accountServiceMock = new();
 
     public AccountControllerTests(WebApplicationFactory<Startup> factory)
     {

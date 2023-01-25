@@ -29,11 +29,11 @@ public class RegisterUserDtoValidatorTests
     {
         var testUsers = new List<User>
         {
-            new User
+            new()
             {
                 Email = "test2@test.com"
             },
-            new User
+            new()
             {
                 Email = "test3@test.com"
             },
