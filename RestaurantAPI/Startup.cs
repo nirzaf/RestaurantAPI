@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using System.Text;
+using System.Threading.Tasks;
 
 using AutoMapper;
 
@@ -113,7 +114,7 @@ public class Startup
         app.UseResponseCaching();
         app.UseStaticFiles();
         app.UseCors("FrontEndClient");
-        seeder.Seed();
+        seeder?.Seed();
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

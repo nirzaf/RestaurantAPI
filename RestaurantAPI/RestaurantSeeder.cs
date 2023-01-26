@@ -16,7 +16,7 @@ namespace RestaurantAPI;
 public class RestaurantSeeder
 {
     private readonly RestaurantDbContext _dbContext;
-    private IPasswordHasher<User> _passwordHasher;
+    private readonly IPasswordHasher<User> _passwordHasher;
 
     public RestaurantSeeder(RestaurantDbContext dbContext, IPasswordHasher<User> passwordHasher)
     {

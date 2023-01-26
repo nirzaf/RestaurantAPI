@@ -25,6 +25,7 @@ public class ErrorHandlingMiddleware : IMiddleware
         }
         catch (ForbidException forbidException)
         {
+            await Console.Error.WriteLineAsync(forbidException.Message);
             context.Response.StatusCode = 403;
         }
         catch (BadRequestException badRequestException)
