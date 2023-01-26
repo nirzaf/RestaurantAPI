@@ -8,9 +8,9 @@ namespace RestaurantAPI.Models.Validators;
 
 public class RestaurantQueryValidator : AbstractValidator<RestaurantQuery>
 {
-    private int[] allowedPageSizes = new[] { 5, 10, 15 };
+    private readonly int[] allowedPageSizes = { 5, 10, 15 };
 
-    private string[] allowedSortByColumnNames =
+    private readonly string[] allowedSortByColumnNames =
         { nameof(Restaurant.Name), nameof(Restaurant.Category), nameof(Restaurant.Description), };
 
     public RestaurantQueryValidator()

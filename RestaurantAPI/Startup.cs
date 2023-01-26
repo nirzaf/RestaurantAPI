@@ -1,3 +1,5 @@
+using System;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,11 +15,13 @@ using FluentValidation.AspNetCore;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 using RestaurantAPI.Authorization;
 using RestaurantAPI.Entities;
+using RestaurantAPI.Filters;
 using RestaurantAPI.Middleware;
 using RestaurantAPI.Models;
 using RestaurantAPI.Models.Validators;
@@ -66,13 +70,19 @@ public class Startup
                 builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
         });
 
+        
         services.AddScoped<IAuthorizationHandler, CreatedMultipleRestaurantsRequirementHandler>();
         services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
         services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
-        services.AddControllers().AddFluentValidation();
+        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+        services.AddControllers(o=>o.Filters.Add(typeof(ExceptionFilters)));
+        services.AddFluentValidationClientsideAdapters();
+        services.AddResponseCaching();
+        services.AddMemoryCache();
+        services.AddFluentValidationAutoValidation();
 
         services.AddScoped<RestaurantSeeder>();
-        services.AddAutoMapper(this.GetType().Assembly);
+        services.AddAutoMapper(GetType().Assembly);
         services.AddScoped<IRestaurantService, RestaurantService>();
         services.AddScoped<IDishService, DishService>();
         services.AddScoped<IAccountService, AccountService>();

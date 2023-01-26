@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Globalization;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantAPI.Entities;
 
@@ -27,12 +30,20 @@ public class RestaurantDbContext : DbContext
         modelBuilder.Entity<Restaurant>()
             .Property(r => r.Name)
             .IsRequired()
-            .HasMaxLength(25);
+            .HasMaxLength(200);
 
         modelBuilder.Entity<Dish>()
             .Property(d => d.Name)
             .IsRequired();
 
+        modelBuilder.Entity<Dish>()
+            .Property(d => d.Price)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Dish>()
+            .Property(d => d.Price)
+            .HasConversion(v => v.ToString(CultureInfo.InvariantCulture), v => decimal.Parse(v));
+        
         modelBuilder.Entity<Address>()
             .Property(a => a.City)
             .IsRequired()

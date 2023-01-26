@@ -1,19 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
+using Bogus;
+
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using RestaurantAPI.Entities;
+using RestaurantAPI.Models;
 
 namespace RestaurantAPI;
 
 public class RestaurantSeeder
 {
     private readonly RestaurantDbContext _dbContext;
+    private IPasswordHasher<User> _passwordHasher;
 
-    public RestaurantSeeder(RestaurantDbContext dbContext)
+    public RestaurantSeeder(RestaurantDbContext dbContext, IPasswordHasher<User> passwordHasher)
     {
         _dbContext = dbContext;
+        _passwordHasher = passwordHasher;
     }
 
     public void Seed()
@@ -22,7 +30,7 @@ public class RestaurantSeeder
         if (_dbContext.Database.IsRelational())
         {
             var pendingMigrations = _dbContext.Database.GetPendingMigrations();
-            if (pendingMigrations != null && pendingMigrations.Any())
+            if (pendingMigrations.Any())
             {
                 _dbContext.Database.Migrate();
             }
@@ -45,18 +53,9 @@ public class RestaurantSeeder
     {
         var roles = new List<Role>
         {
-            new()
-            {
-                Name = "User"
-            },
-            new()
-            {
-                Name = "Manager"
-            },
-            new()
-            {
-                Name = "Admin"
-            },
+            new(name: Roles.User),
+            new(name: Roles.Manager),
+            new(name: Roles.Admin),
         };
 
         return roles;
@@ -64,54 +63,49 @@ public class RestaurantSeeder
 
     private IEnumerable<Restaurant> GetRestaurants()
     {
-        var restaurants = new List<Restaurant>
+        //if name is more than 25 characters, limit it to 24 characters
+        var restaurantList = new Faker<Restaurant>()
+            .RuleFor(r => r.Name, f => f.Company.CompanyName())
+            .RuleFor(r => r.Category, f => f.Commerce.Categories(1).First())
+            .RuleFor(r => r.Description, f => f.Lorem.Paragraph())
+            .RuleFor(r => r.ContactEmail, f => f.Internet.Email())
+            .RuleFor(r => r.HasDelivery, f => f.Random.Bool())
+            .RuleFor(r => r.ContactNumber, f => f.Phone.PhoneNumber())
+            .RuleFor(r => r.Address, f => new Address
+            {
+                City = f.Address.City(),
+                Street = f.Address.StreetAddress(),
+                PostalCode = f.Address.ZipCode()
+            })
+            .RuleFor(r => r.Dishes, _ => new Faker<Dish>()
+                .RuleFor(d => d.Name, f => f.Commerce.ProductName())
+                .RuleFor(d => d.Description, f => f.Lorem.Paragraph())
+                .RuleFor(d => d.Price, f => f.Random.Decimal(100, 1000))
+                .Generate(10))
+            .RuleFor(r => r.CreatedBy, _ => new Faker<User>()
+                .RuleFor(u => u.Email, f => f.Internet.Email())
+                .RuleFor(u => u.FirstName, f => f.Name.FirstName())
+                .RuleFor(u => u.LastName, f => f.Name.LastName())
+                .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
+                .RuleFor(u => u.Role, f => f.PickRandom(_dbContext.Roles.ToList()))
+                .RuleFor(u => u.Nationality, f => f.Address.Country())
+                .RuleFor(u => u.RoleId, f => f.PickRandom(_dbContext.Roles.ToList()).Id)
+                .RuleFor(u => u.DateOfBirth, f => f.Date.Past(18, DateTime.Now.AddYears(-18)))
+                .Generate())
+            .Generate(100);
+        //log all email address and respective password tp console  
+        foreach (var restaurant in restaurantList)
         {
-            new()
-            {
-                Name = "KFC",
-                Category = "Fast Food",
-                Description =
-                    "KFC (short for Kentucky Fried Chicken) is an American fast food restaurant chain headquartered in Louisville, Kentucky, that specializes in fried chicken.",
-                ContactEmail = "contact@kfc.com",
-                HasDelivery = true,
-                Dishes = new List<Dish>
-                {
-                    new()
-                    {
-                        Name = "Nashville Hot Chicken",
-                        Price = 10.30M,
-                    },
+            Console.WriteLine($"{restaurant.CreatedBy.Email} - {restaurant.CreatedBy.PasswordHash}");
+        }
 
-                    new()
-                    {
-                        Name = "Chicken Nuggets",
-                        Price = 5.30M,
-                    },
-                },
-                Address = new Address
-                {
-                    City = "Kraków",
-                    Street = "Długa 5",
-                    PostalCode = "30-001"
-                }
-            },
-            new()
-            {
-                Name = "McDonald Szewska",
-                Category = "Fast Food",
-                Description =
-                    "McDonald's Corporation (McDonald's), incorporated on December 21, 1964, operates and franchises McDonald's restaurants.",
-                ContactEmail = "contact@mcdonald.com",
-                HasDelivery = true,
-                Address = new Address
-                {
-                    City = "Kraków",
-                    Street = "Szewska 2",
-                    PostalCode = "30-001"
-                }
-            }
-        };
+        //hash the password
+        foreach (var restaurant in restaurantList)
+        {
+            restaurant.CreatedBy.PasswordHash =
+                _passwordHasher.HashPassword(restaurant.CreatedBy, restaurant.CreatedBy.PasswordHash);
+        }
 
-        return restaurants;
+        return restaurantList;
     }
 }
