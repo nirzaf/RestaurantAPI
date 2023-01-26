@@ -20,7 +20,7 @@ public class CreatedMultipleRestaurantsRequirementHandler : AuthorizationHandler
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
         CreatedMultipleRestaurantsRequirement requirement)
     {
-        var userId = int.Parse(context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = int.Parse(context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
 
         var createdRestaurantsCount = _context
             .Restaurants

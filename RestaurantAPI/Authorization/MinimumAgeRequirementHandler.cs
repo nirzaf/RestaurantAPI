@@ -19,15 +19,15 @@ public class MinimumAgeRequirementHandler : AuthorizationHandler<MinimumAgeRequi
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
         MinimumAgeRequirement requirement)
     {
-        var dateOfBirth = DateTime.Parse(context.User.FindFirst(c => c.Type == "DateOfBirth").Value);
+        var dateOfBirth = DateTime.Parse(context.User.FindFirst(c => c.Type == "DateOfBirth")?.Value ?? string.Empty);
 
-        var userEmail = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        var userEmail = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
 
         _logger.LogInformation($"User: {userEmail} with date of birth: [{dateOfBirth}]");
 
         if (dateOfBirth.AddYears(requirement.MinimumAge) <= DateTime.Today)
         {
-            _logger.LogInformation("Authorization succedded");
+            _logger.LogInformation("Authorization succeeded");
             context.Succeed(requirement);
         }
         else

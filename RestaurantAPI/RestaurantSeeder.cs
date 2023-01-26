@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using Bogus;
@@ -61,6 +62,7 @@ public class RestaurantSeeder
         return roles;
     }
 
+    [SuppressMessage("ReSharper.DPA", "DPA0000: DPA issues")]
     private IEnumerable<Restaurant> GetRestaurants()
     {
         //if name is more than 25 characters, limit it to 24 characters
@@ -81,7 +83,7 @@ public class RestaurantSeeder
                 .RuleFor(d => d.Name, f => f.Commerce.ProductName())
                 .RuleFor(d => d.Description, f => f.Lorem.Paragraph())
                 .RuleFor(d => d.Price, f => f.Random.Decimal(100, 1000))
-                .Generate(10))
+                .Generate(1))
             .RuleFor(r => r.CreatedBy, _ => new Faker<User>()
                 .RuleFor(u => u.Email, f => f.Internet.Email())
                 .RuleFor(u => u.FirstName, f => f.Name.FirstName())

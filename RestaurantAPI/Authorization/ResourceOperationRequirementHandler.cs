@@ -19,8 +19,8 @@ public class ResourceOperationRequirementHandler : AuthorizationHandler<Resource
             context.Succeed(requirement);
         }
 
-        var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
-        if (restaurant.CreatedById == int.Parse(userId))
+        var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (restaurant.CreatedById == int.Parse(userId!))
         {
             context.Succeed(requirement);
         }
